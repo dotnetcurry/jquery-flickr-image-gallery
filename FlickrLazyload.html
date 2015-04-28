@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<title>Flickr lazyloading</title> 
+        <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">  
+        <link href="css/flickr.css" rel="stylesheet" />
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.js"></script>  
+	  
+		<script type="text/javascript">
+
+        function isVisible($element)
+        {
+	        // Get the current page visible area in the user screen
+	        var topView = $(window).scrollTop();
+	        var botView = topView + $(window).height();
+	        var topElement = $element.offset().top;
+	        var botElement = topElement + $element.height();				
+	        return ((botElement <= botView) && (topElement >= topView));
+        }
+
+        function lazyLoadImage(){
+	        $('.flickr img.lazy').each(function(){
+		        if (isVisible($(this).closest('.imgWrap'))) {				
+			        $(this).one("load", function() {
+				        $(this).removeClass('lazy');
+			        }).attr('src', $(this).attr('data-src')).removeAttr('data-src');						
+		        }
+	        });
+        };
+
+$(function () {
+
+	$(window).scroll(lazyLoadImage);
+
+	var imageList='';
+				
+	$.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?tags=nature&tagmode=any&format=json&jsoncallback=?', function(data) {
+            $(data.items).each(function(i, item) {
+	            imageList+='<div class="col-md-4"><figure><div class="imgWrap"><img class="lazy" src="images/ajax-loader_b.gif" data-src="'+item.media.m+'"/></div><figcaption>'+item.title+'</figcaption></figure></div>';						
+            });
+					
+            if (imageList=='') {
+	            $(".flickr").html("Error while loading images");
+	            return
+            }
+					
+            $(".flickr").append(imageList);
+						
+		var $images = $(".flickr .col-md-4");
+		for(var i = 0; i < $images.length; i+=3) {
+			$images.slice(i, i+3).wrapAll("<div class='row'></div>");
+		}					
+		   
+		lazyLoadImage();
+	});
+			 
+});
+		</script>
+	</head>
+	<body>
+		<div class="flickr">
+		</div>
+	</body>
+</html>

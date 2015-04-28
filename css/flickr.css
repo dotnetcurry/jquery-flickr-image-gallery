@@ -1,0 +1,25 @@
+﻿.flickr .imgWrap {
+	border: 3px outset #666;
+	line-height: 140px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	-moz-box-shadow: 2px 2px 5px #333;
+	-webkit-box-shadow: 2px 2px 5px #333;
+	box-shadow: 2px 2px 5px #333;
+	width: 300px;
+	height: 200px;
+}
+
+.flickr .imgWrap img {
+	width: 300px;
+	height: 200px;
+}
+
+.flickr .imgWrap img.lazy {
+	display: block;
+	width: 100px;
+	height: 100px;				
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15%;
+}
